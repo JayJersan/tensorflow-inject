@@ -1,0 +1,123 @@
+docker run -d --name serving_base tensorflow/serving
+
+docker cp ./mymodel serving_base:/models/mymodel
+
+docker commit --change "ENV MODEL_NAME mymodel" serving_base my-registry/mymodel-serving
+
+docker kill serving_base
+
+docker rm serving_base
+
+docker run -d -p 8501:8501 my-registry/mymodel-serving
+
+docker tag my-registry/mymodel-serving esh279/mymodel-serving:latest
+
+docker push esh279/mymodel-serving:latest
+
+kubectl create namespace tensorflow-inject
+
+kubectl apply -f kubernetes_manifest.yml
+
+kubectl get deployments -n tensorflow-inject
+kubectl get deployments
+
+kubectl get services -n tensorflow-inject
+kubectl get services
+
+kubectl port-forward -n tensorflow-inject service/mymodel-serving 8501:8501
+kubectl port-forward service/mymodel-serving 8501:8501 
+
+
+
+`````` attack```````
+
+
+
+docker cp payload.py 4d04b00100fd:/tmp/payload.py
+
+docker cp keras_inject.py 4d04b00100fd:/tmp/keras_inject.py
+
+docker ps
+
+docker exec -it 4d04b00100fd bash
+
+apt-get update
+apt-get install -y python3 python3-pip
+pip3 install tensorflow
+
+docker restart 4d04b00100fd
+
+docker exec -it 4d04b00100fd bash
+
+python3 /tmp/keras_inject.py /models/mymodel/1 exec /tmp/payload.py
+
+kubectl port-forward service/mymodel-serving 8501:8501
+
+
+`````` in kubernetes pod`````````````
+
+kubectl cp keras_inject.py mymodel-serving-6c575b6d56-pnk7l:/tmp/keras_inject.py
+
+kubectl cp payload.py mymodel-serving-6c575b6d56-pnk7l:/tmp/payload.py
+
+kubectl exec -it mymodel-serving-6c575b6d56-pnk7l -- bash
+
+===== with namespace =====
+kubectl exec -it mymodel-serving-7db958bf45-fcml8 -n tensorflow-inject -- bash
+kubectl cp keras_inject.py -n tensorflow-inject mymodel-serving-7db958bf45-fcml8:/tmp/keras_inject.py
+kubectl cp payload.py -n tensorflow-inject mymodel-serving-7db958bf45-fcml8:/tmp/payload.py
+kubectl exec -n tensorflow-inject mymodel-serving-7db958bf45-fcml8 -- rm /tmp/payload.py
+
+
+
+
+
+cd /tmp
+
+# Check if the files are there
+ls -l keras_inject.py payload.py
+if want to delete those 
+kubectl exec mymodel-serving-6c575b6d56-pnk7l -- rm /tmp/keras_inject.py
+
+
+apt-get update
+apt-get install -y python3-pip
+pip3 install tensorflow requests
+
+python3 keras_inject.py /models/mymodel/1 exec /tmp/payload.py
+
+#check the changes
+ls -l /models/mymodel/1/saved_model.pb
+
+# You might also want to check the TensorFlow Serving logs
+kubectl logs mymodel-serving-6c575b6d56-pnk7l
+
+
+kubectl port-forward service/mymodel-serving 8501:8501
+
+
+=== setting up the cluster digital ocean ===
+
+kubectl --kubeconfig=/<pathtodirectory>/ai-team-cluster-kubeconfig.yaml get nodes
+
+set KUBECONFIG=ai-team-cluster-kubeconfig.yaml
+
+kubectl create namespace tensorflow-inject
+
+====
+onboarding 
+
+helm uninstall -n accuknox-agents accuknox-agents  
+
+
+policies 
+
+kubectl delete -f keras-inject-attack.yaml
+
+kubectl cp keras_inject.py -n tensorflow-inject mymodel-serving-7db958bf45-fcml8:/tmp/keras_inject.py
+
+kubectl exec -n tensorflow-inject  mymodel-serving-7db958bf45-fcml8 -- rm /tmp/keras_inject.py 
+
+kubectl apply -f keras-inject-attack.yaml
+
+kubectl cp keras_inject.py -n tensorflow-inject mymodel-serving-7db958bf45-fcml8:/tmp/keras_inject.py
