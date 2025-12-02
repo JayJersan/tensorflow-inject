@@ -13,7 +13,7 @@ args = parser.parse_args()
 
 command_args = args.args
 if os.path.isfile(command_args):
-    with open(command_args, "r") as in_file:
+    with open(command_args, "r", encoding="utf-8") as in_file:
         command_args = in_file.read()
 
 @tf.function
